@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
 
     public void GiveUp()
     {
-        transform.position=new Vector3(3.157f,-1.485f,0);
+        transform.position=new Vector3(4.16f,-1.54f,0);
         SaveSystem.SavePlayer(this);
     }
 
@@ -69,9 +69,9 @@ public class PlayerController : MonoBehaviour
         grounded = isGrounded();
         if (grounded && Input.GetButtonUp("Jump"))
         {
-            SavePlayer();
             rigidBody.velocity = Vector2.up * jumpForce;
             jumpForce = 3;
+            SavePlayer();
         }
         else if (jumpForce < 18f && Input.GetButton("Jump"))
         {
