@@ -81,7 +81,6 @@ public class PlayerController : MonoBehaviour
 
 
     }
-
     bool isGrounded()
     {
         Vector2 boxPos = transform.position + new Vector3(boxCollider.offset.x, boxCollider.offset.y);
@@ -105,7 +104,11 @@ public class PlayerController : MonoBehaviour
    
 
     }
-
+    void OnApplicationQuit()
+    {
+         SavePlayer();
+    }
+        
 
     
 }
