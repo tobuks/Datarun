@@ -25,7 +25,9 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rigidBody;
     private BoxCollider2D boxCollider;
 
-
+    public  float jumpNumber;
+    public float fallNumber;
+    public float ingameTime = 0;
    
     void SavePlayer()
     {
@@ -47,6 +49,8 @@ public class PlayerController : MonoBehaviour
         position.y = data.position[1];
         position.z = data.position[2];
         transform.position = position;
+        jumpNumber = data.position[3];
+        fallNumber = data.position[4];
     }
     void Start()
     {
@@ -101,6 +105,7 @@ public class PlayerController : MonoBehaviour
         {
             rigidBody.velocity = Vector2.up * jumpForce;
             jumpForce = 3;
+            jumpNumber++;
             SavePlayer();
         }
         //set jump force 
@@ -108,8 +113,19 @@ public class PlayerController : MonoBehaviour
         {
             jumpForce += 0.2f;
         }
-
+        //falling
+        if (rigidBody.velocity.y < -20)
+        {
+           // isFalling = true;
+            fallNumber++;
+        }
+        else
+        {
+            //isFalling = false;
+        }
     }
+
+ 
 
     
     private bool isGrounded()
