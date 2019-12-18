@@ -26,8 +26,11 @@ public class PlayerController : MonoBehaviour
     private BoxCollider2D boxCollider;
 
     public  float jumpNumber;
-    public float fallNumber;
+    public int fallNumber;
     public float ingameTime = 0;
+    public float timeInFall = 0f;
+    public float fallCount;
+    private bool isFalling;
    
     void SavePlayer()
     {
@@ -50,7 +53,7 @@ public class PlayerController : MonoBehaviour
         position.z = data.position[2];
         transform.position = position;
         jumpNumber = data.position[3];
-        fallNumber = data.position[4];
+        
     }
     void Start()
     {
@@ -113,16 +116,25 @@ public class PlayerController : MonoBehaviour
         {
             jumpForce += 0.2f;
         }
-        //falling
-        if (rigidBody.velocity.y < -20)
+       
+     
+        //falling counter
+        if (grounded)
         {
-           // isFalling = true;
-            fallNumber++;
+            timeInFall = 0f;
+            isFalling = true;
         }
-        else
+        if (!grounded && rigidBody.velocity.y < 0)
         {
-            //isFalling = false;
+            timeInFall += Time.deltaTime;
         }
+
+        if (timeInFall > 1 && isFalling)
+        {
+            isFalling = false;
+            fallNumber ++;
+        }
+
     }
 
  
