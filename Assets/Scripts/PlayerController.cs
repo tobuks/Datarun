@@ -4,6 +4,7 @@ using System.Numerics;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
@@ -16,6 +17,8 @@ public class PlayerController : MonoBehaviour
     private float rayLength = 0.668f;
     public LayerMask layerMask;
     public bool grounded;
+    public GameObject VillainObject;
+    public bool canMove;
 
     private Rigidbody2D rigidBody;
     private BoxCollider2D boxCollider;
@@ -27,7 +30,8 @@ public class PlayerController : MonoBehaviour
 
     public void GiveUp()
     {
-        transform.position=new Vector3(-4f,-1.52f,0);
+        transform.position = new Vector2(-4f, -1.52f);
+        VillainObject.SetActive(true);
         SaveSystem.SavePlayer(this);
     }
 
@@ -50,36 +54,39 @@ public class PlayerController : MonoBehaviour
   
     private void FixedUpdate()
     {
+        if (canMove)
+        {
+            if (isGrounded() && !Input.GetButton("Jump"))
+            {
+                float moveInput = Input.GetAxis("Horizontal");
+                rigidBody.velocity = new Vector2(moveInput * speed, rigidBody.velocity.y);
+            }
+            else if (Input.GetButton("Jump") && isGrounded())
+            {
+                rigidBody.velocity = new Vector2(0, rigidBody.velocity.y);
 
-        if (isGrounded() && !Input.GetButton("Jump"))
-        {
-            float moveInput = Input.GetAxis("Horizontal");
-            rigidBody.velocity = new Vector2(moveInput * speed, rigidBody.velocity.y);
-        }
-        else if(Input.GetButton("Jump") && isGrounded())
-        {
-            rigidBody.velocity = new Vector2(0, rigidBody.velocity.y);
-           
+            }
         }
 
     }
     // Update is called once per frame
     void Update()
     {
-        grounded = isGrounded();
-        if (grounded && Input.GetButtonUp("Jump"))
+        if (canMove)
         {
-            rigidBody.velocity = Vector2.up * jumpForce;
-            jumpForce = 3;
-            SavePlayer();
+            grounded = isGrounded();
+            if (grounded && Input.GetButtonUp("Jump"))
+            {
+                rigidBody.velocity = Vector2.up * jumpForce;
+                jumpForce = 3;
+                SavePlayer();
+            }
+            else if (jumpForce < 18f && Input.GetButton("Jump"))
+            {
+                jumpForce += 0.2f;
+            }
         }
-        else if (jumpForce < 18f && Input.GetButton("Jump"))
-        {
-            jumpForce += 0.2f;
-        }
-     
-
-
+        canMove = VillanController.isAnimation;
     }
     bool isGrounded()
     {
