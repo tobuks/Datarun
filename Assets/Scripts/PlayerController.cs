@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
 
     public void GiveUp()
     {
-        transform.position=new Vector3(4.16f,-1.54f,0);
+        transform.position=new Vector3(-4f,-1.52f,0);
         SaveSystem.SavePlayer(this);
     }
 
