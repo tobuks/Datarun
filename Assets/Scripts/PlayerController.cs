@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Numerics;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
-using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
@@ -31,7 +29,6 @@ public class PlayerController : MonoBehaviour
     public void GiveUp()
     {
         transform.position = new Vector2(-4f, -1.52f);
-        VillainObject.SetActive(true);
         SaveSystem.SavePlayer(this);
     }
 
