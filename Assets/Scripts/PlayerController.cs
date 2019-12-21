@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Numerics;
-using UnityEditor;
+﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
@@ -21,6 +16,7 @@ public class PlayerController : MonoBehaviour
    [SerializeField] public GameObject windZone;
    [SerializeField] public int timer;
 
+   
 
     private Rigidbody2D rigidBody;
     private BoxCollider2D boxCollider;
@@ -36,7 +32,8 @@ public class PlayerController : MonoBehaviour
 
     public void GiveUp()
     {
-        transform.position=new Vector3(4.16f,-1.54f,0);
+       
+        transform.position=new Vector2(4.16f,-1.54f);
         SaveSystem.SavePlayer(this);
     }
 
@@ -169,7 +166,6 @@ public class PlayerController : MonoBehaviour
         }
 
     }
-
 
     void OnApplicationQuit()
     {
