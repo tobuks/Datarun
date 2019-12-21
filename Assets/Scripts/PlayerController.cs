@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
@@ -11,13 +12,13 @@ public class PlayerController : MonoBehaviour
     public LayerMask layerMask;
 
     public bool grounded;
-
     public bool inWindZone=false;
+    private bool isStart;
    [SerializeField] public GameObject windZone;
    [SerializeField] public int timer;
 
-   
 
+    //private MainMenu mainMenu;
     private Rigidbody2D rigidBody;
     private BoxCollider2D boxCollider;
 
@@ -32,8 +33,7 @@ public class PlayerController : MonoBehaviour
 
     public void GiveUp()
     {
-       
-        transform.position=new Vector2(4.16f,-1.54f);
+        transform.position=new Vector2(-4f,-1.54f);
         SaveSystem.SavePlayer(this);
     }
 
@@ -51,12 +51,18 @@ public class PlayerController : MonoBehaviour
     }
     void Start()
     {
+        if (MainMenu.isStart)
+        {
+            GiveUp();
+            MainMenu.isStart = false;
+        }
+        LoadPlayer();
         //start wind system
         StartCoroutine(Wind());
-
+        
         rigidBody = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
-        LoadPlayer();
+        
     }
     //wind on and off
     IEnumerator Wind()
@@ -110,6 +116,7 @@ public class PlayerController : MonoBehaviour
         {
             jumpForce += 0.2f;
         }
+
         //falling
         if (rigidBody.velocity.y < -20)
         {
