@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
 using UnityEditor;
@@ -9,39 +8,37 @@ using Vector3 = UnityEngine.Vector3;
 
 public class PlayerController : MonoBehaviour
 {
+    // Start is called before the first frame update
+
     public float speed = 0.01f;
     public float jumpForce = 3f;
     private float rayLength = 0.668f;
     public LayerMask layerMask;
-
-    public bool grounded;
     public GameObject VillainObject;
     public bool canMove;
 
-    public bool inWindZone=false;
-   [SerializeField] public GameObject windZone;
-   [SerializeField] public int timer;
+    public bool grounded;
 
+    public bool inWindZone = false;
+    [SerializeField] public GameObject windZone;
+    [SerializeField] public int timer;
 
     private Rigidbody2D rigidBody;
     private BoxCollider2D boxCollider;
 
-    public  float jumpNumber;
-    public float fallNumber;
-    public float ingameTime = 0;
-   
-    void SavePlayer()
+
+    public void SavePlayer()
     {
         SaveSystem.SavePlayer(this);
     }
 
     public void GiveUp()
     {
-        transform.position = new Vector2(-4f, -1.52f);
+        transform.position = new Vector2(2f, -1.52f);
         SaveSystem.SavePlayer(this);
     }
 
-    void LoadPlayer()
+    private void LoadPlayer()
     {
         PlayerData data = SaveSystem.LoadPlayer();
 
@@ -50,19 +47,18 @@ public class PlayerController : MonoBehaviour
         position.y = data.position[1];
         position.z = data.position[2];
         transform.position = position;
-        jumpNumber = data.position[3];
-        fallNumber = data.position[4];
     }
     void Start()
     {
-        //start wind system
+        //start wind system 
         StartCoroutine(Wind());
 
         rigidBody = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
         LoadPlayer();
     }
-    //wind on and off
+
+    //wind on and off 
     IEnumerator Wind()
     {
         while (true)
@@ -73,37 +69,52 @@ public class PlayerController : MonoBehaviour
             windZone.SetActive(true);
         }
     }
- 
+
     private void FixedUpdate()
     {
         if (canMove)
         {
-            if (isGrounded() && !Input.GetButton("Jump"))
+            //player movement right left 
+            if (isGrounded() && !Input.GetButton("Jump") && !inWindZone)
             {
                 float moveInput = Input.GetAxis("Horizontal");
                 rigidBody.velocity = new Vector2(moveInput * speed, rigidBody.velocity.y);
             }
+
+            //move block when we hold jump button 
             else if (Input.GetButton("Jump") && isGrounded())
             {
                 rigidBody.velocity = new Vector2(0, rigidBody.velocity.y);
+            }
 
+            //player behaviour in wind zone   
+            if (inWindZone)
+            {
+                rigidBody.constraints = RigidbodyConstraints2D.FreezePositionY;
+                rigidBody.constraints = RigidbodyConstraints2D.FreezeRotation;
+                rigidBody.AddForce(windZone.GetComponent<WindArea>().direction * windZone.GetComponent<WindArea>().strength);
             }
         }
 
     }
+
     // Update is called once per frame
     void Update()
     {
         if (canMove)
         {
             grounded = isGrounded();
+
+            //jump 
             if (grounded && Input.GetButtonUp("Jump"))
             {
                 rigidBody.velocity = Vector2.up * jumpForce;
                 jumpForce = 3;
                 SavePlayer();
             }
-            else if (jumpForce < 18f && Input.GetButton("Jump"))
+
+            //set jump force  
+            else if (jumpForce < 18f && Input.GetButton("Jump") && grounded && (inWindZone == false))
             {
                 jumpForce += 0.2f;
             }
@@ -113,10 +124,10 @@ public class PlayerController : MonoBehaviour
     bool isGrounded()
     {
         Vector2 boxPos = transform.position + new Vector3(boxCollider.offset.x, boxCollider.offset.y);
-        
-        Vector2 pos = boxPos - new Vector2(boxCollider.size.x / 2, boxCollider.size.y/2 +0.1f);
-        Vector2 posL = boxPos - new Vector2((boxCollider.size.x / 2)-0.02f, 0);
-        Vector2 posR = boxPos + new Vector2((boxCollider.size.x / 2)-0.02f, 0);
+
+        Vector2 pos = boxPos - new Vector2(boxCollider.size.x / 2, boxCollider.size.y / 2 + 0.1f);
+        Vector2 posL = boxPos - new Vector2((boxCollider.size.x / 2) - 0.02f, 0);
+        Vector2 posR = boxPos + new Vector2((boxCollider.size.x / 2) - 0.02f, 0);
 
         Vector2 direction2 = Vector2.down;
         Vector2 direction = Vector2.right;
@@ -124,13 +135,13 @@ public class PlayerController : MonoBehaviour
         RaycastHit2D hitL = Physics2D.Raycast(posL, direction2, rayLength, layerMask);
         RaycastHit2D hitR = Physics2D.Raycast(posR, direction2, rayLength, layerMask);
         RaycastHit2D hit = Physics2D.Raycast(pos, direction, boxCollider.size.x, layerMask);
-        Debug.DrawRay(pos, direction, Color.green );
-        Debug.DrawRay(posL, direction2, Color.red );
-        Debug.DrawRay(posR, direction2, Color.red );
-   
-     
-      return (hitL.collider != null || hitR.collider != null || hit.collider != null );
-   
+        Debug.DrawRay(pos, direction, Color.green);
+        Debug.DrawRay(posL, direction2, Color.red);
+        Debug.DrawRay(posR, direction2, Color.red);
+
+
+        return (hitL.collider != null || hitR.collider != null || hit.collider != null);
+
 
     }
 
@@ -141,7 +152,7 @@ public class PlayerController : MonoBehaviour
             windZone = coll.gameObject;
             inWindZone = true;
         }
-       
+
     }
     private void OnTriggerExit2D(Collider2D coll)
     {
@@ -152,12 +163,11 @@ public class PlayerController : MonoBehaviour
 
     }
 
-
     void OnApplicationQuit()
     {
-         SavePlayer();
+        SavePlayer();
     }
-        
 
-    
+
+
 }
