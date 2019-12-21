@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
 using UnityEditor;
@@ -8,20 +9,28 @@ using Vector3 = UnityEngine.Vector3;
 
 public class PlayerController : MonoBehaviour
 {
-    // Start is called before the first frame update
-
     public float speed = 0.01f;
     public float jumpForce = 3f;
     private float rayLength = 0.668f;
     public LayerMask layerMask;
+
     public bool grounded;
     public GameObject VillainObject;
     public bool canMove;
 
+    public bool inWindZone=false;
+   [SerializeField] public GameObject windZone;
+   [SerializeField] public int timer;
+
+
     private Rigidbody2D rigidBody;
     private BoxCollider2D boxCollider;
 
-    public void SavePlayer()
+    public  float jumpNumber;
+    public float fallNumber;
+    public float ingameTime = 0;
+   
+    void SavePlayer()
     {
         SaveSystem.SavePlayer(this);
     }
@@ -32,7 +41,7 @@ public class PlayerController : MonoBehaviour
         SaveSystem.SavePlayer(this);
     }
 
-    private void LoadPlayer()
+    void LoadPlayer()
     {
         PlayerData data = SaveSystem.LoadPlayer();
 
@@ -41,14 +50,30 @@ public class PlayerController : MonoBehaviour
         position.y = data.position[1];
         position.z = data.position[2];
         transform.position = position;
+        jumpNumber = data.position[3];
+        fallNumber = data.position[4];
     }
     void Start()
     {
+        //start wind system
+        StartCoroutine(Wind());
+
         rigidBody = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
         LoadPlayer();
     }
-  
+    //wind on and off
+    IEnumerator Wind()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(timer);
+            windZone.SetActive(false);
+            yield return new WaitForSeconds(timer);
+            windZone.SetActive(true);
+        }
+    }
+ 
     private void FixedUpdate()
     {
         if (canMove)
@@ -108,6 +133,26 @@ public class PlayerController : MonoBehaviour
    
 
     }
+
+    private void OnTriggerEnter2D(Collider2D coll)
+    {
+        if (coll.gameObject.tag == "windArea")
+        {
+            windZone = coll.gameObject;
+            inWindZone = true;
+        }
+       
+    }
+    private void OnTriggerExit2D(Collider2D coll)
+    {
+        if (coll.gameObject.tag == "windArea")
+        {
+            inWindZone = false;
+        }
+
+    }
+
+
     void OnApplicationQuit()
     {
          SavePlayer();
