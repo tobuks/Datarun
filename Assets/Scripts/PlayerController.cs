@@ -25,8 +25,12 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rigidBody;
     private BoxCollider2D boxCollider;
 
+    public int jumpCount;
+    public int fallCount;
+    private bool isFalling;
+    public float inGameTime = 0;
 
-    public void SavePlayer()
+    void SavePlayer()
     {
         SaveSystem.SavePlayer(this);
     }
@@ -128,6 +132,15 @@ public class PlayerController : MonoBehaviour
 
         }
         canMove = VillanController.isAnimation;
+        if (grounded && isFalling)
+        {
+            isFalling = false;
+            fallCount++;
+        }
+        if (rigidBody.velocity.y < -20)
+        {
+            isFalling = true;
+        }
     }
 
     bool isGrounded()
