@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
@@ -12,9 +12,10 @@ public class PlayerController : MonoBehaviour
     public float jumpForce = 3f;
     private float rayLength = 0.668f;
     public LayerMask layerMask;
-    public GameObject VillainObject;
-    public bool canMove;
 
+    public GameObject VillainObject;
+
+    public bool canMove;
     public bool grounded;
 
     public bool inWindZone = false;
@@ -32,7 +33,7 @@ public class PlayerController : MonoBehaviour
 
     public void GiveUp()
     {
-        transform.position=new Vector2(-4f,-1.54f);
+        transform.position = new Vector2(-4f, -1.54f);
         SaveSystem.SavePlayer(this);
     }
 
@@ -46,6 +47,7 @@ public class PlayerController : MonoBehaviour
         position.z = data.position[2];
         transform.position = position;
     }
+
     void Start()
     {
         if (MainMenu.isStart)
@@ -53,13 +55,14 @@ public class PlayerController : MonoBehaviour
             GiveUp();
             MainMenu.isStart = false;
         }
+
         LoadPlayer();
         //start wind system
         StartCoroutine(Wind());
-        
+
         rigidBody = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
-        
+
     }
 
     //wind on and off 
@@ -78,13 +81,13 @@ public class PlayerController : MonoBehaviour
     {
         if (canMove)
         {
+            grounded = isGrounded();
             //player movement right left 
             if (isGrounded() && !Input.GetButton("Jump") && !inWindZone)
             {
                 float moveInput = Input.GetAxis("Horizontal");
                 rigidBody.velocity = new Vector2(moveInput * speed, rigidBody.velocity.y);
             }
-
             //move block when we hold jump button 
             else if (Input.GetButton("Jump") && isGrounded())
             {
@@ -96,7 +99,8 @@ public class PlayerController : MonoBehaviour
             {
                 rigidBody.constraints = RigidbodyConstraints2D.FreezePositionY;
                 rigidBody.constraints = RigidbodyConstraints2D.FreezeRotation;
-                rigidBody.AddForce(windZone.GetComponent<WindArea>().direction * windZone.GetComponent<WindArea>().strength);
+                rigidBody.AddForce(windZone.GetComponent<WindArea>().direction *
+                                   windZone.GetComponent<WindArea>().strength);
             }
         }
 
@@ -107,46 +111,25 @@ public class PlayerController : MonoBehaviour
     {
         if (canMove)
         {
-            grounded = isGrounded();
-            rigidBody.velocity = Vector2.up * jumpForce;
-            jumpForce = 3;
-            jumpNumber++;
-            SavePlayer();
-        }
-        //set jump force 
-        else if (jumpForce < 18f && Input.GetButton("Jump") && grounded && (inWindZone==false))
-        {
-            jumpForce += 0.2f;
-        }
-
-        //falling
-        if (rigidBody.velocity.y < -20)
-        {
-           // isFalling = true;
-            fallNumber++;
-        }
-        else
-        {
-            //isFalling = false;
-        }
-    }
-
+            
             //jump 
             if (grounded && Input.GetButtonUp("Jump"))
             {
                 rigidBody.velocity = Vector2.up * jumpForce;
+                // jumpNumber++;
                 jumpForce = 3;
                 SavePlayer();
             }
-
-            //set jump force  
+            //set jump force 
             else if (jumpForce < 18f && Input.GetButton("Jump") && grounded && (inWindZone == false))
             {
                 jumpForce += 0.2f;
             }
+
         }
         canMove = VillanController.isAnimation;
     }
+
     bool isGrounded()
     {
         Vector2 boxPos = transform.position + new Vector3(boxCollider.offset.x, boxCollider.offset.y);
@@ -180,6 +163,7 @@ public class PlayerController : MonoBehaviour
         }
 
     }
+
     private void OnTriggerExit2D(Collider2D coll)
     {
         if (coll.gameObject.tag == "windArea")
@@ -194,6 +178,6 @@ public class PlayerController : MonoBehaviour
         SavePlayer();
     }
 
-
-
 }
+
+
