@@ -1,8 +1,6 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using System.Numerics;
-using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
@@ -34,7 +32,7 @@ public class PlayerController : MonoBehaviour
 
     public void GiveUp()
     {
-        transform.position = new Vector2(2f, -1.52f);
+        transform.position=new Vector2(-4f,-1.54f);
         SaveSystem.SavePlayer(this);
     }
 
@@ -50,12 +48,18 @@ public class PlayerController : MonoBehaviour
     }
     void Start()
     {
-        //start wind system 
+        if (MainMenu.isStart)
+        {
+            GiveUp();
+            MainMenu.isStart = false;
+        }
+        LoadPlayer();
+        //start wind system
         StartCoroutine(Wind());
-
+        
         rigidBody = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
-        LoadPlayer();
+        
     }
 
     //wind on and off 
@@ -104,6 +108,28 @@ public class PlayerController : MonoBehaviour
         if (canMove)
         {
             grounded = isGrounded();
+            rigidBody.velocity = Vector2.up * jumpForce;
+            jumpForce = 3;
+            jumpNumber++;
+            SavePlayer();
+        }
+        //set jump force 
+        else if (jumpForce < 18f && Input.GetButton("Jump") && grounded && (inWindZone==false))
+        {
+            jumpForce += 0.2f;
+        }
+
+        //falling
+        if (rigidBody.velocity.y < -20)
+        {
+           // isFalling = true;
+            fallNumber++;
+        }
+        else
+        {
+            //isFalling = false;
+        }
+    }
 
             //jump 
             if (grounded && Input.GetButtonUp("Jump"))

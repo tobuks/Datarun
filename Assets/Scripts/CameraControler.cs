@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CameraControler : MonoBehaviour
 {
@@ -11,12 +9,7 @@ public class CameraControler : MonoBehaviour
     private Vector2 focusPosition;
     private float up=12;
     private float down = -3f;
-        
-    void Start()
-    {
-        
-    }
-
+    
     // Update is called once per frame
     void Update()
     {

@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FallingPlatforms : MonoBehaviour
@@ -15,6 +14,7 @@ public class FallingPlatforms : MonoBehaviour
         collider = GetComponent<Collider2D>();
         collider.enabled=true;
         rb.isKinematic = true;
+        rb.gravityScale = 0;
     }
 
     private void OnCollisionEnter2D(Collision2D col)
@@ -38,6 +38,7 @@ public class FallingPlatforms : MonoBehaviour
     private void DropPlatform()
     {
         rb.isKinematic = false;
+        rb.gravityScale = 2;
         collider.enabled = false;
     }
 }
