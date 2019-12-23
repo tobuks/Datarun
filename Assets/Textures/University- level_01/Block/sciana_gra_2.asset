@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: "Bez\_tytu\u0142u"
+  m_Name: sciana_gra_2
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 21300000, guid: 68567c25db51e744782b0447dd269b25, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c4f6d3109bd27704e963345b55a81aee, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1

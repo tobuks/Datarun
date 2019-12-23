@@ -1,14 +1,13 @@
 ﻿using System.Collections;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
-using System.Diagnostics;
 
 public class VillanController : MonoBehaviour
 {
 
     private Rigidbody2D rigidBody;
     private BoxCollider2D boxCollider;
-    public static bool isAnimation;
+    public static bool isAnimation=false;
 
     void Start()
     {
