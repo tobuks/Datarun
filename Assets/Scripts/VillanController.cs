@@ -8,16 +8,30 @@ public class VillanController : MonoBehaviour
     private Rigidbody2D rigidBody;
     private BoxCollider2D boxCollider;
     public static bool isAnimation=false;
-
+    private bool startAnimation=false;
+   
     void Start()
     {
         rigidBody = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
-        gameObject.SetActive(false);
-        isAnimation = true;
-        Show_Me_Villain();
+        if (startAnimation ||MainMenu.isStart)
+        {
+            isAnimation = true;
+            Show_Me_Villain();
+        }
+        else
+        {
+            isAnimation = true;
+            gameObject.SetActive(false);
+        }
     }
 
+    void Update()
+    {
+        
+        if( PlayerController.isRestart)
+        { startAnimation = true;}
+    }
     public void Show_Me_Villain()
     {
         transform.position = new Vector2(4.64f, -1.24f);

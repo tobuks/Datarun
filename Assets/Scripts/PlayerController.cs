@@ -11,10 +11,11 @@ public class PlayerController : MonoBehaviour
     private float rayLength = 0.9f;
     
     //bools
-    public bool canMove;
     public bool grounded;
     public bool inWindZone = false;
+    public bool inStaticWindZone = false;
     private bool isFalling;
+    public static bool isRestart=false;
 
     //serialized fields
     [SerializeField] public GameObject windZone;
@@ -52,7 +53,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!VillanController.isAnimation) return;
         //player movement right left 
-        if (grounded && !Input.GetButton("Jump") && !inWindZone)
+        if (grounded && !Input.GetButton("Jump") && !inWindZone &&!inStaticWindZone)
         {
             float moveInput = Input.GetAxis("Horizontal");
             rigidBody.velocity = new Vector2(moveInput * speed, rigidBody.velocity.y);
@@ -65,7 +66,7 @@ public class PlayerController : MonoBehaviour
 
        
         //set jump force 
-        if (jumpForce < 18f && Input.GetButton("Jump") && grounded && (inWindZone == false))
+        if (jumpForce < 18f && Input.GetButton("Jump") && grounded && !inWindZone && !inStaticWindZone)
         {
             jumpForce += 0.2f;
         }
@@ -73,11 +74,19 @@ public class PlayerController : MonoBehaviour
         //player behaviour in wind zone   
         if (inWindZone)
         {
+            rigidBody.constraints = RigidbodyConstraints2D.FreezeRotation;
+            rigidBody.AddForce(windZone.GetComponent<WindArea>().direction *
+                               windZone.GetComponent<WindArea>().strength);
+        }
+
+        if (inStaticWindZone)
+        {
             rigidBody.constraints = RigidbodyConstraints2D.FreezePositionY;
             rigidBody.constraints = RigidbodyConstraints2D.FreezeRotation;
             rigidBody.AddForce(windZone.GetComponent<WindArea>().direction *
                                windZone.GetComponent<WindArea>().strength);
         }
+      
 
     }
     // Update is called once per frame
@@ -134,7 +143,9 @@ public class PlayerController : MonoBehaviour
     public void GiveUp()
     {
         transform.position = new Vector2(-4f, -1.54f);
+        isRestart = true;
         SaveSystem.SavePlayer(this);
+        
     }
 
     private void LoadPlayer()
@@ -153,7 +164,7 @@ public class PlayerController : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(timer);
+            yield return new WaitForSeconds(3);
             windZone.SetActive(false);
             yield return new WaitForSeconds(timer);
             windZone.SetActive(true);
@@ -162,9 +173,12 @@ public class PlayerController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D coll)
     {
         if (coll.gameObject.tag == "windArea")
-        {
-            windZone = coll.gameObject;
+        { 
             inWindZone = true;
+        }
+        if (coll.gameObject.tag == "staticWindArea")
+        {
+            inStaticWindZone = true;
         }
 
     }
@@ -175,7 +189,10 @@ public class PlayerController : MonoBehaviour
         {
             inWindZone = false;
         }
-
+        if (coll.gameObject.tag == "staticWindArea")
+        {
+            inStaticWindZone = false;
+        }
     }
     void OnApplicationQuit()
     {
