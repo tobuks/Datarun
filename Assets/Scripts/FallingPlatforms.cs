@@ -5,13 +5,13 @@ public class FallingPlatforms : MonoBehaviour
 {
     private Rigidbody2D rb;
     [SerializeField] public GameObject myPrefabs;
-    private Collider2D collider;
+    private new BoxCollider2D collider;
    
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        collider = GetComponent<Collider2D>();
+        collider = GetComponent<BoxCollider2D>();
         collider.enabled=true;
         rb.isKinematic = true;
         rb.gravityScale = 0;

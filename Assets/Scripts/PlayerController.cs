@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     public bool inWindZone = false;
     public bool inStaticWindZone = false;
     private bool isFalling;
+    private bool inDownScene = false;
     public static bool isRestart=false;
 
     //serialized fields
@@ -26,22 +27,24 @@ public class PlayerController : MonoBehaviour
     private BoxCollider2D boxCollider;
     public LayerMask layerMask;
 
-    //countery
+    //countery niech one wyleca do menu pause i beda private tutaj one nie sa potrzebne
     public int jumpCount;
     public int fallCount;
     
-    public float inGameTime = 0;//co to jest
+    public float inGameTime = 0;//co to jest//To jest czas w grze //to go tu nie powinno byc tylko w menu i to nie jest do niczego urzyte wiec 
+    //to jest smiec a nie czas w grze
 
     // Start is called before the first frame update
     void Start()
     {
+        //Start when player play first time or restart game
         if (MainMenu.isStart)
         {
             GiveUp();
             MainMenu.isStart = false;
         }
-
         LoadPlayer();
+
         //start wind system
         StartCoroutine(Wind());
 
@@ -52,23 +55,36 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         if (!VillanController.isAnimation) return;
-        //player movement right left 
-        if (grounded && !Input.GetButton("Jump") && !inWindZone &&!inStaticWindZone)
-        {
-            float moveInput = Input.GetAxis("Horizontal");
-            rigidBody.velocity = new Vector2(moveInput * speed, rigidBody.velocity.y);
-        }
-        //move block when we hold jump button 
-        else if (Input.GetButton("Jump") && grounded)
-        {
-            rigidBody.velocity = new Vector2(0, rigidBody.velocity.y);
-        }
-
        
-        //set jump force 
-        if (jumpForce < 18f && Input.GetButton("Jump") && grounded && !inWindZone && !inStaticWindZone)
+        // 3 level mechanics 
+        if (inDownScene)
+        { 
+            //player movement right left 
+            if (!grounded)
+            {
+                float moveInput = Input.GetAxis("Horizontal");
+                rigidBody.velocity = new Vector2(moveInput * speed, rigidBody.velocity.y);
+            }
+        }
+        else
         {
-            jumpForce += 0.2f;
+            //player movement right left 
+            if (grounded && !Input.GetButton("Jump") && !inWindZone && !inStaticWindZone)
+            {
+                float moveInput = Input.GetAxis("Horizontal");
+                rigidBody.velocity = new Vector2(moveInput * speed, rigidBody.velocity.y);
+            }
+            //move block when we hold jump button 
+            else if (Input.GetButton("Jump") && grounded && !inWindZone && !inStaticWindZone)
+            {
+                rigidBody.velocity = new Vector2(0, rigidBody.velocity.y);
+            }
+
+            //set jump force 
+            if (jumpForce < 18f && Input.GetButton("Jump") && grounded && !inWindZone && !inStaticWindZone)
+            {
+                jumpForce += 0.2f;
+            }
         }
 
         //player behaviour in wind zone   
@@ -92,16 +108,34 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+       
         grounded = IsGrounded();
         if (!VillanController.isAnimation) return;
+        
+
+        // 3 level mechanics 
+        if (CameraControler.sceneCount == 12 && !inDownScene)
+        {
+            rigidBody.velocity = new Vector2(0,-4f);
+            rigidBody.gravityScale = 0.0f;
+            inDownScene = true;
+        }
+
+        // 3 level mechanics 
+        if ((CameraControler.sceneCount == 11 || CameraControler.sceneCount == 16) && inDownScene)
+        {
+            inDownScene = false;
+            rigidBody.gravityScale = 2f;
+        }
 
         //jump 
-        if (grounded && Input.GetButtonUp("Jump"))
+        if (grounded && Input.GetButtonUp("Jump") && !inDownScene)
         {
             rigidBody.velocity = Vector2.up * jumpForce;
             jumpCount++;
             jumpForce = 3;
-            SavePlayer();
+            //SavePlayer();
         }
         //falling control
         if (grounded && isFalling)
@@ -109,7 +143,7 @@ public class PlayerController : MonoBehaviour
             isFalling = false;
             fallCount++;
         }
-        if (rigidBody.velocity.y < -20)
+        if (rigidBody.velocity.y < -20 && !inDownScene)
         {
             isFalling = true;
         }
@@ -129,9 +163,9 @@ public class PlayerController : MonoBehaviour
         RaycastHit2D hitL = Physics2D.Raycast(posL, direction2, rayLength, layerMask);
         RaycastHit2D hitR = Physics2D.Raycast(posR, direction2, rayLength, layerMask);
         RaycastHit2D hit = Physics2D.Raycast(pos, direction, boxCollider.size.x, layerMask);
-        Debug.DrawRay(pos, direction, Color.green);
+        /*Debug.DrawRay(pos, direction, Color.green);
         Debug.DrawRay(posL, direction2, Color.red);
-        Debug.DrawRay(posR, direction2, Color.red);
+        Debug.DrawRay(posR, direction2, Color.red);*/
 
         return (hitL.collider != null || hitR.collider != null || hit.collider != null);
     }
@@ -145,7 +179,6 @@ public class PlayerController : MonoBehaviour
         transform.position = new Vector2(-4f, -1.54f);
         isRestart = true;
         SaveSystem.SavePlayer(this);
-        
     }
 
     private void LoadPlayer()

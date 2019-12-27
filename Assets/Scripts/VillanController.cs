@@ -28,7 +28,6 @@ public class VillanController : MonoBehaviour
 
     void Update()
     {
-        
         if( PlayerController.isRestart)
         { startAnimation = true;}
     }
