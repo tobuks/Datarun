@@ -26,11 +26,18 @@ public class PlayerController : MonoBehaviour
     private BoxCollider2D boxCollider;
     public LayerMask layerMask;
 
-    //countery
+    //counters
     public int jumpCount;
     public int fallCount;
     
-    public float inGameTime = 0;//co to jest
+    public float inGameTime = 0;//co to jest !! To jest czas w grze
+
+    //Animation
+    public Animator animator;
+    public float horizontalMove;
+    public bool IsFacingRight;
+    public bool SpacePressed;
+    public int flip;
 
     // Start is called before the first frame update
     void Start()
@@ -51,7 +58,7 @@ public class PlayerController : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (!VillanController.isAnimation) return;
+        //if (!VillanController.isAnimation) return;
         //player movement right left 
         if (grounded && !Input.GetButton("Jump") && !inWindZone &&!inStaticWindZone)
         {
@@ -86,6 +93,16 @@ public class PlayerController : MonoBehaviour
             rigidBody.AddForce(windZone.GetComponent<WindArea>().direction *
                                windZone.GetComponent<WindArea>().strength);
         }
+
+        //for chracter animation
+        if (Input.GetButton("Jump"))
+        {
+            SpacePressed = true;
+        }
+        else
+        {
+            SpacePressed = false;
+        }
       
 
     }
@@ -114,6 +131,22 @@ public class PlayerController : MonoBehaviour
             isFalling = true;
         }
 
+        //animation
+        horizontalMove = Input.GetAxisRaw("Horizontal") * speed;
+        animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
+        animator.SetBool("SpacePressed", SpacePressed);
+        animator.SetBool("Falling", isFalling);
+     
+        //player flipping
+        if (horizontalMove < 0 && !IsFacingRight)
+        {
+            Flip();
+        }
+        else if(horizontalMove > 0 && IsFacingRight)
+        {
+            Flip();
+        }
+
     }
     bool IsGrounded()
     {
@@ -134,6 +167,14 @@ public class PlayerController : MonoBehaviour
         Debug.DrawRay(posR, direction2, Color.red);
 
         return (hitL.collider != null || hitR.collider != null || hit.collider != null);
+    }
+    private void Flip()
+    {
+        IsFacingRight = !IsFacingRight;
+        Vector3 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
+        flip++;
     }
     void SavePlayer()
     {
