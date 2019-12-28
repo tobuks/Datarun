@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     public bool inWindZone = false;
     public bool inStaticWindZone = false;
     private bool isFalling;
-    private bool inDownScene = false;
+    private bool inDownScene;
     public static bool isRestart=false;
 
     //serialized fields
@@ -54,6 +54,7 @@ public class PlayerController : MonoBehaviour
     }
     private void FixedUpdate()
     {
+       
         if (!VillanController.isAnimation) return;
        
         // 3 level mechanics 
@@ -109,23 +110,22 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
 
-       
+        inDownScene = CameraControler.change;
         grounded = IsGrounded();
         if (!VillanController.isAnimation) return;
         
 
-        // 3 level mechanics 
-        if (CameraControler.sceneCount == 12 && !inDownScene)
+        // physic change in level 3
+        if (inDownScene)
         {
             rigidBody.velocity = new Vector2(0,-4f);
             rigidBody.gravityScale = 0.0f;
-            inDownScene = true;
+            
         }
 
-        // 3 level mechanics 
-        if ((CameraControler.sceneCount == 11 || CameraControler.sceneCount == 16) && inDownScene)
+        // back to physic from other levels
+        if (!inDownScene)
         {
-            inDownScene = false;
             rigidBody.gravityScale = 2f;
         }
 

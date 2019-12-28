@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Numerics;
+using UnityEngine;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 public class CameraControler : MonoBehaviour
 {
@@ -11,10 +14,11 @@ public class CameraControler : MonoBehaviour
     private float down = -3f;
     private float left = -8.5f;
     private float right = 18.5f;
-
     private float rightLeft = 27f;
+    public float followDistance;
+    public static bool change = false;
 
-    public static int sceneCount =0;
+    
 
     // Update is called once per frame
     void Update()
@@ -24,10 +28,7 @@ public class CameraControler : MonoBehaviour
         //camera up-down
         if (focusPosition.y >= up)
         {
-            if(sceneCount>10)
-            { sceneCount--;}
-            else
-            { sceneCount++; }
+            
             up += 15f;
             down += 15f;
             transform.position += new Vector3(0, 15f, 0);
@@ -35,10 +36,7 @@ public class CameraControler : MonoBehaviour
         }
         if (focusPosition.y < down)
         {
-            if (sceneCount > 10)
-            { sceneCount++; }
-            else
-            { sceneCount--; }
+          
             up -= 15f;
             down -= 15f;
             transform.position += new Vector3(0, -15f, 0);
@@ -46,18 +44,39 @@ public class CameraControler : MonoBehaviour
         //camera lef-right
         if (focusPosition.x <= left)
         {
-            sceneCount++;
+            
             left -= rightLeft;
             right -= rightLeft;
             transform.position += new Vector3(-rightLeft, 0,0);
-            //Debug.Log(up);
+            
         }
         if (focusPosition.x > right)
         {
-            sceneCount--;
+           
             left += rightLeft;
             right += rightLeft;
             transform.position += new Vector3(rightLeft, 0,0);
         }
+
+        if (focusPosition.y < 73 && focusPosition.y > 12.5f && focusPosition.x < -145 && focusPosition.x > -166)
+        {
+            Vector3 distance = focusPosition - (Vector2)transform.position;
+            Vector3 moveDistance = Vector2.ClampMagnitude(distance, distance.magnitude - followDistance);
+            transform.position+=new Vector3(0,moveDistance.y,0);
+            change = true;
+        }
+
+        if (change && focusPosition.y > 73)
+        {
+            change = false;
+            transform.position += new Vector3(0, +7.4f, 0);
+           
+        }
+        if (change && focusPosition.y < 12.5)
+        {
+            change = false;
+            transform.position += new Vector3(0, +7.5f, 0);
+        }
+
     }
 }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8113178322465427957}
   - component: {fileID: 8113178322465427956}
   - component: {fileID: 8113178322465427959}
-  - component: {fileID: 8113178322465427955}
+  - component: {fileID: 3917349396235048339}
   m_Layer: 8
   m_Name: FlayingPlatform
   m_TagString: Untagged
@@ -130,7 +130,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 5
---- !u!114 &8113178322465427955
+--- !u!114 &3917349396235048339
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
