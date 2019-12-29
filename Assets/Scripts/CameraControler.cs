@@ -14,9 +14,10 @@ public class CameraControler : MonoBehaviour
     private float down = -3f;
     private float left = -8.5f;
     private float right = 18.5f;
-    private float rightLeft = 27f;
+    private readonly float rightLeft = 27f;
     public float followDistance;
     public static bool change = false;
+    private bool changeSize=false;
 
     
 
@@ -76,6 +77,18 @@ public class CameraControler : MonoBehaviour
         {
             change = false;
             transform.position += new Vector3(0, +7.5f, 0);
+        }
+
+        if (focusPosition.x < -197.5f && !changeSize)
+        {
+            focusObject.transform.localScale = new Vector3(1,1,1);
+            changeSize = true;
+        }
+
+        if (changeSize && focusPosition.x > -197.5f)
+        {
+            focusObject.transform.localScale = new Vector3(1.37f, 1.37f, 1.37f);
+            changeSize = false;
         }
 
     }

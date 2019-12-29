@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     //floats
     public float speed = 0.01f;
     public float jumpForce = 3f;
-    private float rayLength = 0.9f;
+    private readonly float rayLength = 0.9f;
     
     //bools
     public bool grounded;
@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     private bool isFalling;
     private bool inDownScene;
     public static bool isRestart=false;
+   
 
     //serialized fields
     [SerializeField] public GameObject windZone;
@@ -56,7 +57,7 @@ public class PlayerController : MonoBehaviour
     {
        
         if (!VillanController.isAnimation) return;
-       
+        
         // 3 level mechanics 
         if (inDownScene)
         { 
@@ -113,7 +114,7 @@ public class PlayerController : MonoBehaviour
         inDownScene = CameraControler.change;
         grounded = IsGrounded();
         if (!VillanController.isAnimation) return;
-        
+       
 
         // physic change in level 3
         if (inDownScene)
@@ -213,7 +214,7 @@ public class PlayerController : MonoBehaviour
         {
             inStaticWindZone = true;
         }
-
+       
     }
 
     private void OnTriggerExit2D(Collider2D coll)
@@ -226,6 +227,7 @@ public class PlayerController : MonoBehaviour
         {
             inStaticWindZone = false;
         }
+      
     }
     void OnApplicationQuit()
     {
