@@ -29,11 +29,9 @@ public class PlayerController : MonoBehaviour
     public LayerMask layerMask;
 
     //countery niech one wyleca do menu pause i beda private tutaj one nie sa potrzebne
-    public int jumpCount;
     public int fallCount;
     
-    public float inGameTime = 0;//co to jest//To jest czas w grze //to go tu nie powinno byc tylko w menu i to nie jest do niczego urzyte wiec 
-    //to jest smiec a nie czas w grze
+    
 
     // Start is called before the first frame update
     void Start()
@@ -134,7 +132,7 @@ public class PlayerController : MonoBehaviour
         if (grounded && Input.GetButtonUp("Jump") && !inDownScene)
         {
             rigidBody.velocity = Vector2.up * jumpForce;
-            jumpCount++;
+            JumpScript.JumpCount +=1;
             jumpForce = 3;
             //SavePlayer();
         }
@@ -142,7 +140,7 @@ public class PlayerController : MonoBehaviour
         if (grounded && isFalling)
         {
             isFalling = false;
-            fallCount++;
+            FallNumberScript.FallNumber++;
         }
         if (rigidBody.velocity.y < -20 && !inDownScene)
         {
