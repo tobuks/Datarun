@@ -29,8 +29,7 @@ public class PlayerController : MonoBehaviour
     //counters
     public int jumpCount;
     public int fallCount;
-    
-    public float inGameTime = 0;//co to jest !! To jest czas w grze
+     
 
     //Animation
     public Animator animator;
@@ -168,6 +167,7 @@ public class PlayerController : MonoBehaviour
 
         return (hitL.collider != null || hitR.collider != null || hit.collider != null);
     }
+
     private void Flip()
     {
         IsFacingRight = !IsFacingRight;
