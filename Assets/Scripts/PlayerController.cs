@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public float speed = 0.01f;
     public float jumpForce = 3f;
     private readonly float rayLength = 0.9f;
+    public static float rayCastSize = 0.1f;
     
     //bools
     public bool grounded;
@@ -27,10 +28,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rigidBody;
     private BoxCollider2D boxCollider;
     public LayerMask layerMask;
-
-    //countery niech one wyleca do menu pause i beda private tutaj one nie sa potrzebne
-    public int fallCount;
-    
+  
     
 
     // Start is called before the first frame update
@@ -110,7 +108,7 @@ public class PlayerController : MonoBehaviour
     {
 
         inDownScene = CameraControler.change;
-        grounded = IsGrounded();
+        grounded = IsGrounded(rayCastSize);
         if (!VillanController.isAnimation) return;
        
 
@@ -134,7 +132,7 @@ public class PlayerController : MonoBehaviour
             rigidBody.velocity = Vector2.up * jumpForce;
             JumpScript.JumpCount +=1;
             jumpForce = 3;
-            //SavePlayer();
+       
         }
         //falling control
         if (grounded && isFalling)
@@ -148,13 +146,13 @@ public class PlayerController : MonoBehaviour
         }
 
     }
-    bool IsGrounded()
+    bool IsGrounded(float size)
     {
         Vector2 boxPos = transform.position + new Vector3(boxCollider.offset.x, boxCollider.offset.y);
 
-        Vector2 pos = boxPos - new Vector2(boxCollider.size.x / 2, boxCollider.size.y / 2 + 0.1f);
-        Vector2 posL = boxPos - new Vector2((boxCollider.size.x / 2) - 0.02f, 0);
-        Vector2 posR = boxPos + new Vector2((boxCollider.size.x / 2) - 0.02f, 0);
+        Vector2 pos = boxPos - new Vector2(boxCollider.size.x / 2, boxCollider.size.y / 2 );
+        Vector2 posL = boxPos - new Vector2((boxCollider.size.x / 2) + size, 0);
+        Vector2 posR = boxPos + new Vector2((boxCollider.size.x / 2) + size, 0);
 
         Vector2 direction2 = Vector2.down;
         Vector2 direction = Vector2.right;
@@ -162,9 +160,9 @@ public class PlayerController : MonoBehaviour
         RaycastHit2D hitL = Physics2D.Raycast(posL, direction2, rayLength, layerMask);
         RaycastHit2D hitR = Physics2D.Raycast(posR, direction2, rayLength, layerMask);
         RaycastHit2D hit = Physics2D.Raycast(pos, direction, boxCollider.size.x, layerMask);
-        /*Debug.DrawRay(pos, direction, Color.green);
+        Debug.DrawRay(pos, direction, Color.green);
         Debug.DrawRay(posL, direction2, Color.red);
-        Debug.DrawRay(posR, direction2, Color.red);*/
+        Debug.DrawRay(posR, direction2, Color.red);
 
         return (hitL.collider != null || hitR.collider != null || hit.collider != null);
     }

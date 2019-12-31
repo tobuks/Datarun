@@ -5,17 +5,18 @@ using UnityEngine.UI;
 public class InGameTimeScript : MonoBehaviour
 {
 
-    public static float InGameTime = 0;
-    Text igtime;
+    public static float inGameTime = 0;
+    Text inGameTimeText;
     // Start is called before the first frame update
     void Start()
     {
-        igtime = GetComponent<Text>();
+        inGameTimeText = GetComponent<Text>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        igtime.text = "" + InGameTime;
+        inGameTimeText.text = "" + inGameTime;
+        
     }
 }

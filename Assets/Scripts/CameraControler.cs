@@ -82,12 +82,14 @@ public class CameraControler : MonoBehaviour
         if (focusPosition.x < -197.5f && !changeSize)
         {
             focusObject.transform.localScale = new Vector3(1,1,1);
+            PlayerController.rayCastSize = 0;
             changeSize = true;
         }
 
         if (changeSize && focusPosition.x > -197.5f)
         {
             focusObject.transform.localScale = new Vector3(1.37f, 1.37f, 1.37f);
+            PlayerController.rayCastSize = 0.1f;
             changeSize = false;
         }
 

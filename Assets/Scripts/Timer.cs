@@ -20,6 +20,6 @@ public class Timer : MonoBehaviour
         string seconds = (tmpT % 60).ToString("f1");
 
         timerText.text = hours + ":" + minutes + ":" + seconds;
-        InGameTimeScript.InGameTime = tmpT;
+       
     }
 }
