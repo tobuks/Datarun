@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     public float jumpForce = 3f;
     private readonly float rayLength = 0.9f;
     public static float rayCastSize = 0.1f;
+    public float moveInput;
     
     //bools
     public bool grounded;
@@ -28,8 +29,13 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rigidBody;
     private BoxCollider2D boxCollider;
     public LayerMask layerMask;
-  
-    
+
+    //animation
+    public Animator animator;
+    public bool spacePressed;
+    public bool IsFacingRight;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -60,7 +66,7 @@ public class PlayerController : MonoBehaviour
             //player movement right left 
             if (!grounded)
             {
-                float moveInput = Input.GetAxis("Horizontal");
+                moveInput = Input.GetAxis("Horizontal");
                 rigidBody.velocity = new Vector2(moveInput * speed, rigidBody.velocity.y);
             }
         }
@@ -69,7 +75,7 @@ public class PlayerController : MonoBehaviour
             //player movement right left 
             if (grounded && !Input.GetButton("Jump") && !inWindZone && !inStaticWindZone)
             {
-                float moveInput = Input.GetAxis("Horizontal");
+                moveInput = Input.GetAxis("Horizontal");
                 rigidBody.velocity = new Vector2(moveInput * speed, rigidBody.velocity.y);
             }
             //move block when we hold jump button 
@@ -106,7 +112,12 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        //animator state variables
+        animator.SetFloat("Speed", Mathf.Abs(moveInput));
+        animator.SetBool("Grounded", grounded);
+        animator.SetBool("Falling",isFalling);
+        animator.SetBool("SpacePressed", spacePressed);
+        //
         inDownScene = CameraControler.change;
         grounded = IsGrounded(rayCastSize);
         if (!VillanController.isAnimation) return;
@@ -132,8 +143,18 @@ public class PlayerController : MonoBehaviour
             rigidBody.velocity = Vector2.up * jumpForce;
             ScoreScript.jumpCount++;
             jumpForce = 3;
-       
+            
+
         }
+       if(grounded && Input.GetButton("Jump") && !inDownScene)
+        {
+            spacePressed = true;
+        }
+       else
+        {
+            spacePressed = false;
+        }
+       
         //falling control
         if (grounded && isFalling)
         {
@@ -143,6 +164,15 @@ public class PlayerController : MonoBehaviour
         if (rigidBody.velocity.y < -20 && !inDownScene)
         {
             isFalling = true;
+        }
+        //player flipping
+        if (moveInput < 0 && !IsFacingRight)
+        {
+            Flip();
+        }
+        else if (moveInput > 0 && IsFacingRight)
+        {
+            Flip();
         }
 
     }
@@ -187,6 +217,14 @@ public class PlayerController : MonoBehaviour
         position.y = data.position[1];
         position.z = data.position[2];
         transform.position = position;
+    }
+    private void Flip()
+    {
+        IsFacingRight = !IsFacingRight;
+        Vector3 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
+
     }
 
     //wind on and off
