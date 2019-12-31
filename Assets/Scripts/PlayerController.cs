@@ -92,7 +92,6 @@ public class PlayerController : MonoBehaviour
             //set jump force
             if (jumpForce < 18f && Input.GetButton("Jump") && grounded && !inWindZone && !inStaticWindZone)
             {
-
                 jumpForce += 0.2f;
             }
 
@@ -119,16 +118,18 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         //animator state variables
         animator.SetFloat("Speed", Mathf.Abs(moveInput));
         animator.SetBool("Grounded", grounded);
         animator.SetBool("Falling", isFalling);
         animator.SetBool("SpacePressed", spacePressed);
-        //
+
+
         inDownScene = CameraControler.change;
         grounded = IsGrounded(rayCastSize);
-        if (!VillanController.isAnimation) return;
 
+        if (!VillanController.isAnimation) return;
 
         // physic change in level 3
         if (inDownScene)
@@ -150,8 +151,6 @@ public class PlayerController : MonoBehaviour
             rigidBody.velocity = Vector2.up * jumpForce;
             ScoreScript.jumpCount++;
             jumpForce = 3;
-
-
         }
 
         //falling control
@@ -198,13 +197,15 @@ public class PlayerController : MonoBehaviour
     void SavePlayer()
     {
         SaveSystem.SavePlayer(this);
+        SaveSystem.SaveScore();
     }
 
     public void GiveUp()
     {
-        transform.position = new Vector2(-4f, -1.54f);
+        transform.position = new Vector2(-4f, -1.14f);
         isRestart = true;
         SaveSystem.SavePlayer(this);
+        ScoreScript.GiveUp();
     }
 
     private void LoadPlayer()
@@ -265,6 +266,7 @@ public class PlayerController : MonoBehaviour
     void OnApplicationQuit()
     {
         SavePlayer();
+        SaveSystem.SaveScore();
     }
 
 }

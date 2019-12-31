@@ -16,7 +16,17 @@ public class SaveSystem
         formatter.Serialize(stream,data);
         stream.Close();
     }
+    public static void SaveScore()
+    {
+        BinaryFormatter formatter = new BinaryFormatter();
+        string path = Application.persistentDataPath + "/score.neverend";
+        FileStream stream = new FileStream(path, FileMode.Create);
 
+        ScoreData data = new ScoreData();
+
+        formatter.Serialize(stream, data);
+        stream.Close();
+    }
     public static PlayerData LoadPlayer()
     {
         string path = Application.persistentDataPath + "/player.neverend";
@@ -34,5 +44,24 @@ public class SaveSystem
             return null;
         }
         
+    }
+    public static ScoreData LoadScore()
+    {
+        string path = Application.persistentDataPath + "/score.neverend";
+        if (File.Exists(path))
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream = new FileStream(path, FileMode.Open);
+
+            ScoreData data = formatter.Deserialize(stream) as ScoreData;
+            stream.Close();
+            return data;
+        }
+        else
+        {
+            Debug.LogError("Save file not found in " + path);
+            return null;
+        }
+
     }
 }

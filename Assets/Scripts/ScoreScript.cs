@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class ScoreScript : MonoBehaviour
@@ -8,24 +7,22 @@ public class ScoreScript : MonoBehaviour
     public TextMeshProUGUI fallNumberText;
     public TextMeshProUGUI jumpNumberText;
 
+    public static float startTime;
 
-    private float startTime;
-
-    public static int fallNumber = 0;
-    public static int jumpCount = 0;
-    public static float tmpT = 0;
+    public static int fallNumber;
+    public static int jumpCount;
+    public static float tmpT;
     // Start is called before the first frame update
     void Start()
     {
-        startTime = Time.time;
-        
-
+        LoadScore();
     }
 
     // Update is called once per frame
     void Update()
     {
-        tmpT = Time.time - startTime;
+        tmpT = Time.time + startTime;
+       
         string hours = ((int)tmpT / 3600).ToString("f0");
         string minutes = ((int)tmpT / 60).ToString("f0");
         string seconds = (tmpT % 60).ToString("f0");
@@ -34,5 +31,21 @@ public class ScoreScript : MonoBehaviour
         jumpNumberText.text = "Jump number: " + jumpCount;
         fallNumberText.text = "Fall number: " + fallNumber;
 
+    }
+
+    private void LoadScore()
+    {
+        ScoreData data = SaveSystem.LoadScore();
+        fallNumber = data.fallNumber;
+        jumpCount = data.jumpCount;
+        startTime = data.startTime;
+    }
+
+    public static void GiveUp()
+    {
+        fallNumber = 0;
+        jumpCount = 0;
+        startTime = 0;
+        SaveSystem.SaveScore();
     }
 }

@@ -3,7 +3,6 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    private PlayerController player;
     public static bool isStart = false;
     public void PlayGame()
     {
