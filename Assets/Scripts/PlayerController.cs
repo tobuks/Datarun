@@ -130,7 +130,7 @@ public class PlayerController : MonoBehaviour
         if (grounded && Input.GetButtonUp("Jump") && !inDownScene)
         {
             rigidBody.velocity = Vector2.up * jumpForce;
-            JumpScript.JumpCount +=1;
+            ScoreScript.jumpCount++;
             jumpForce = 3;
        
         }
@@ -138,7 +138,7 @@ public class PlayerController : MonoBehaviour
         if (grounded && isFalling)
         {
             isFalling = false;
-            FallNumberScript.FallNumber++;
+            ScoreScript.fallNumber++;
         }
         if (rigidBody.velocity.y < -20 && !inDownScene)
         {
