@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class ScoreScript : MonoBehaviour
+public class JumpScript : MonoBehaviour
 {
 
     public static int JumpCount = 0;

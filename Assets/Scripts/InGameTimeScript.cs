@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class ScoreScript : MonoBehaviour
+public class InGameTimeScript : MonoBehaviour
 {
 
-    public static int FallNumber = 0;
-    Text fllnumber;
+    public static float InGameTime = 0;
+    Text igtime;
     // Start is called before the first frame update
     void Start()
     {
-        fllnumber = GetComponent<Text>();
+        igtime = GetComponent<Text>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        fllnumber.text = "" + FallNumber;
+        igtime.text = "" + InGameTime;
     }
 }
