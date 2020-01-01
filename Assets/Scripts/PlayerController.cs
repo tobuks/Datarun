@@ -8,8 +8,9 @@ public class PlayerController : MonoBehaviour
     //floats
     public float speed = 0.01f;
     public float jumpForce = 3f;
-    private readonly float rayLength = 0.9f;
-    public static float rayCastSize = 0.11f;
+    public static float rayLength =0.9f;
+    public static float rayCastSizeX = 0.11f;
+    public static float rayCastSizeY = 0.18f;
     public float moveInput;
 
     //bools
@@ -127,7 +128,8 @@ public class PlayerController : MonoBehaviour
 
 
         inDownScene = CameraControler.change;
-        grounded = IsGrounded(rayCastSize);
+        grounded = IsGrounded();
+       
 
         if (!VillanController.isAnimation) return;
 
@@ -174,13 +176,13 @@ public class PlayerController : MonoBehaviour
         }
 
     }
-    bool IsGrounded(float size)
+    bool IsGrounded()
     {
         Vector2 boxPos = transform.position + new Vector3(boxCollider.offset.x, boxCollider.offset.y);
-        Vector2 pos = boxPos - new Vector2(boxCollider.size.x, boxCollider.size.y - 0.22f);
-
-        Vector2 posL = boxPos - new Vector2((boxCollider.size.x / 2) + size, 0);
-        Vector2 posR = boxPos + new Vector2((boxCollider.size.x / 2) + size, 0);
+        
+        Vector2 pos = boxPos - new Vector2(boxCollider.size.x-rayCastSizeY, rayLength);
+        Vector2 posL = boxPos - new Vector2((boxCollider.size.x / 2) + rayCastSizeX, 0);
+        Vector2 posR = boxPos + new Vector2((boxCollider.size.x / 2) + rayCastSizeX, 0);
 
         Vector2 direction2 = Vector2.down;
         Vector2 direction = Vector2.right;
