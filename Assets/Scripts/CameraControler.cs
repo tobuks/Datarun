@@ -81,7 +81,16 @@ public class CameraControler : MonoBehaviour
 
         if (focusPosition.x < -197.5f && !changeSize)
         {
-            focusObject.transform.localScale = new Vector3(1,1,1);
+            Vector3 direction = focusObject.transform.localScale;
+            if (direction.x < 0)
+            {
+                focusObject.transform.localScale = new Vector3(-1, 1, 1);
+            }
+            else
+            {
+                focusObject.transform.localScale = new Vector3(1, 1, 1);
+            }
+           // focusObject.transform.localScale = new Vector3(1,1,1);
             PlayerController.rayCastSizeX = 0;
             PlayerController.rayCastSizeY = 0.28f;
             PlayerController.rayLength = 0.64f;
@@ -90,7 +99,16 @@ public class CameraControler : MonoBehaviour
 
         if (changeSize && focusPosition.x > -197.5f)
         {
-            focusObject.transform.localScale = new Vector3(1.37f, 1.37f, 1.37f);
+            Vector3 direction = focusObject.transform.localScale;
+            if (direction.x < 0)
+            {
+                focusObject.transform.localScale = new Vector3(-1.37f, 1.37f, 1.37f);
+            }
+            else
+            {
+                focusObject.transform.localScale = new Vector3(1.37f, 1.37f, 1.37f);
+            }
+            //focusObject.transform.localScale = new Vector3(1.37f, 1.37f, 1.37f);
             PlayerController.rayCastSizeX = 0.11f;
             PlayerController.rayCastSizeY = 0.18f;
             PlayerController.rayLength = 0.9f;

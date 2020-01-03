@@ -167,11 +167,11 @@ public class PlayerController : MonoBehaviour
             isFalling = true;
         }
         //player flipping
-        if (moveInput < 0 && !IsFacingRight)
+        if (moveInput > 0 && !IsFacingRight)
         {
             Flip();
         }
-        else if (moveInput > 0 && IsFacingRight)
+        else if (moveInput < 0 && IsFacingRight)
         {
             Flip();
         }
