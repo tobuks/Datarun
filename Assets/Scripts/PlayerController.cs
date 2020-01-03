@@ -125,6 +125,7 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("Grounded", grounded);
         animator.SetBool("Falling", isFalling);
         animator.SetBool("SpacePressed", spacePressed);
+        animator.SetBool("DownScene", inDownScene);
 
 
         inDownScene = CameraControler.change;
