@@ -8,13 +8,14 @@ public class MovingObject : MonoBehaviour
     private bool movingRight = true;
     private bool stop = false;
     public Transform groundDetection;
+    public LayerMask layerMask;
     void Update()
     {
         if (!stop)
         {
             transform.Translate(Vector2.right*speed*Time.deltaTime);
         }
-        RaycastHit2D groundInfo = Physics2D.Raycast(groundDetection.position,Vector2.down,0.8f);
+        RaycastHit2D groundInfo = Physics2D.Raycast(groundDetection.position,Vector2.down,0.8f,layerMask);
         if (!groundInfo.collider)
         {
             if (movingRight)

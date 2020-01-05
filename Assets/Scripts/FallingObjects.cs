@@ -27,7 +27,7 @@ public class FallingObjects : MonoBehaviour
 
     void Update()
     {
-        RaycastHit2D groundInfo = Physics2D.Raycast(transform.position, Vector2.down, 0.1f, layerMask);
+        RaycastHit2D groundInfo = Physics2D.Raycast(transform.position, Vector2.down, 0.3f, layerMask);
         if (groundInfo.collider)
         {
             Destroy(gameObject);
