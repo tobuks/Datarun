@@ -96,6 +96,10 @@ public class PlayerController : MonoBehaviour
                 jumpForce += 0.2f;
             }
 
+            if (!grounded)
+            {
+                jumpForce = 3;
+            }
         }
 
         //player behaviour in wind zone  
