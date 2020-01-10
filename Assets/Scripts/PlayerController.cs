@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
     public Animator animator;
     public bool spacePressed;
     public bool IsFacingRight;
+    public bool fallingrn;
 
 
 
@@ -130,6 +131,10 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("Falling", isFalling);
         animator.SetBool("SpacePressed", spacePressed);
         animator.SetBool("DownScene", inDownScene);
+        if(animator.GetComponent(FarmerFall).enabled)
+        {
+            Debug.Log("dziala");
+        }
 
 
         inDownScene = CameraControler.change;
@@ -170,6 +175,7 @@ public class PlayerController : MonoBehaviour
         {
             isFalling = true;
         }
+        
         //player flipping
         if (moveInput > 0 && !IsFacingRight)
         {
