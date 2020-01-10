@@ -92,7 +92,7 @@ public class PlayerController : MonoBehaviour
             }
 
             //set jump force
-            if (jumpForce < 18f && Input.GetButton("Jump") && grounded && !inWindZone && !inStaticWindZone)
+            if (jumpForce < 18f && Input.GetButton("Jump") && grounded && !inWindZone && !inStaticWindZone && !animator.GetCurrentAnimatorStateInfo(0).IsName("FarmerFall"))
             {
                 jumpForce += 0.2f;
             }
