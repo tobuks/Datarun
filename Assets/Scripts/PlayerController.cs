@@ -131,10 +131,7 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("Falling", isFalling);
         animator.SetBool("SpacePressed", spacePressed);
         animator.SetBool("DownScene", inDownScene);
-        if(animator.GetComponent(FarmerFall).enabled)
-        {
-            Debug.Log("dziala");
-        }
+      
 
 
         inDownScene = CameraControler.change;
@@ -158,7 +155,7 @@ public class PlayerController : MonoBehaviour
         }
 
         //jump
-        if (grounded && Input.GetButtonUp("Jump") && !inDownScene)
+        if (grounded && Input.GetButtonUp("Jump") && !inDownScene && !animator.GetCurrentAnimatorStateInfo(0).IsName("FarmerFall"))
         {
             rigidBody.velocity = Vector2.up * jumpForce;
             ScoreScript.jumpCount++;
