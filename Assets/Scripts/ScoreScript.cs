@@ -16,12 +16,17 @@ public class ScoreScript : MonoBehaviour
     void Start()
     {
         LoadScore();
+        startTime = Time.time;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (PauseMenu.GameIsPaused  == false)
+        {
         tmpT = Time.time + startTime;
+        }
+        
        
         string hours = ((int)tmpT / 3600).ToString("f0");
         string minutes = ((int)tmpT / 60).ToString("f0");
