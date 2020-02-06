@@ -248,7 +248,15 @@ public class PlayerController : MonoBehaviour
             windZone.SetActive(true);
         }
     }
-    private void OnTriggerEnter2D(Collider2D coll)
+
+    public void Reject(Vector2 position)
+    {
+        float magnitude;
+        Vector3  direction =  ( transform.position- (Vector3)position).normalized;
+        magnitude = IsGrounded() ? 1600 : 700;
+        GetComponent<Rigidbody2D>().AddForce(direction*magnitude);
+    }                                                                                                    
+    private void OnTriggerEnter2D(Collider2D coll)  
     {
         if (coll.gameObject.tag == "windArea")
         {
@@ -258,9 +266,17 @@ public class PlayerController : MonoBehaviour
         {
             inStaticWindZone = true;
         }
-
+      
     }
 
+    /*void OnCollisionEnter2D(Collision2D coll)
+    {
+        if (coll.gameObject.tag == "rocket")
+        {
+            Vector2 direction = -(coll.contacts[0].point - (Vector2)transform.position).normalized;
+            rigidBody.AddForce(direction*10f);
+        }
+    }*/
     private void OnTriggerExit2D(Collider2D coll)
     {
         if (coll.gameObject.tag == "windArea")
